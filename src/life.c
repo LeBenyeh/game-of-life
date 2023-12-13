@@ -14,30 +14,28 @@ void Display(bool univ[HEIGHT][WIDTH])
     printf("\n");
   }
 }
+
+void next_gen(bool univ[HEIGHT][WIDTH]) // Sert à print l'univers à la génération n+1
+{
+  load_seed("../seeds/beacon-10x10.life",univ); // A remplacer par l'univers n+1 déjà calculé
+  system("clear");
+  Display(univ);
+}
 int main() {
-  // Simple example. Replace by your own code.
+
+  //-----------------------------Début création des variables------------------------------//
   char button_press='0';
   bool univ[HEIGHT][WIDTH];
-  while(1)
+
+  //-----------------------------Fin création des variables------------------------------//
+  Display(univ);
+  while(1)      // Début de la boucle
   {
-      button_press ='0';
-      load_seed("../seeds/beacon-10x10.life",univ);
-      system("clear");
-      Display(univ);
-      while(button_press != 'a')
-      {
-        scanf("%c",&button_press);
-        if (button_press =='q') return 0;
-      }
-      load_seed("../seeds/blinker-10x10.life",univ);
-      system("clear");
-      Display(univ);
-      button_press ='0';
-      while(button_press != 'a')
-      {
-        scanf("%c",&button_press);
-        if (button_press =='q') return 0;
-      }
+
+    scanf("%c",&button_press);
+    if (button_press =='q') return 0;       // Q pour quitter
+    else if (button_press =='a') next_gen(univ);  // A pour afficher la prochaine génération
+    else button_press ='0';
   }
 
   return 0;
