@@ -5,6 +5,7 @@
 #include "inout.h"
 void Display(bool univ[HEIGHT][WIDTH])
 {
+  system("clear");
   for (int i =0; i<WIDTH;i++)
   {
     for(int j=0; j<HEIGHT; j++)
@@ -15,26 +16,26 @@ void Display(bool univ[HEIGHT][WIDTH])
   }
 }
 
-void next_gen(bool univ[HEIGHT][WIDTH]) // Sert à print l'univers à la génération n+1
-{
-  load_seed("../seeds/beacon-10x10.life",univ); // A remplacer par l'univers n+1 déjà calculé
-  system("clear");
-  Display(univ);
-}
 int main() {
 
   //-----------------------------Début création des variables------------------------------//
   char button_press='0';
   bool univ[HEIGHT][WIDTH];
+  const char * seed = "../seeds/beacon-10x10.life"; // seed à placer ici
 
   //-----------------------------Fin création des variables------------------------------//
-  Display(univ);
-  while(1)      // Début de la boucle
+
+
+  load_seed(seed,univ);
+  Display(univ); // Premier affichage
+
+  //----------------------------Début de la boucle -------------------------------------//
+  while(1)
   {
 
     scanf("%c",&button_press);
     if (button_press =='q') return 0;       // Q pour quitter
-    else if (button_press =='a') next_gen(univ);  // A pour afficher la prochaine génération
+    else if (button_press =='a') Display(univ);  // A pour afficher la prochaine génération
     else button_press ='0';
   }
 
