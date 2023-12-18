@@ -11,18 +11,33 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH])
   {
     for(j=-1; j<2;j++)
     {
-      if(lig+i >= 0 && lig+i <= HEIGHT)
+      if(lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)
       {
-        if(col+j >= 0 && col+j <= WIDTH)
+        if(lig+i != lig || col+j != col)
         {
-          if(lig+i != lig || col+j != col)
+          if(univ[lig+i][col+j] == 1)
           {
-            if(univ[lig+i][col+j] == 1)
-            {
-              c++;
-            }
+            c++;
           }
+        }
+      }
+    }
+  }
+  return c;
+}
 
+int count2(int lig, int col, bool univ[HEIGHT][WIDTH])
+{
+  int c=0, i, j;
+  for(i=-1; i<2;i++)
+  {
+    for(j=-1; j<2;j++)
+    {
+      if(lig+i != lig || col+j != col)
+      {
+        if(univ[(lig+i)%HEIGHT][(col+j)%WIDTH] == 1)
+        {
+          c++;
         }
       }
     }
