@@ -1,6 +1,6 @@
 int nmod(int val)
 {
-  if(val==-1) return 9;
+  if(val==-1) return HEIGHT-1;
   else return val%HEIGHT;
 }
 
