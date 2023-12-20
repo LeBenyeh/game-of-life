@@ -4,9 +4,9 @@ int nmod(int val)
   else return val%HEIGHT;
 }
 
-int count(int lig, int col, bool univ[HEIGHT][WIDTH])
+int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
 {
-  int Periodic, c=0, i, j;
+  int c=0, i, j;
   if(Periodic == 1)
   {
     for(i=-1; i<2;i++)
@@ -36,7 +36,7 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH])
   return c;
 }
 
-void evolve(bool univ[HEIGHT][WIDTH])
+void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, int maxdeath)
 {
   bool univ2[HEIGHT][WIDTH]={0};
   int neigh;
@@ -44,15 +44,15 @@ void evolve(bool univ[HEIGHT][WIDTH])
   {
     for (int j=0; j<WIDTH; j++)
     {
-      neigh = count(i,j,univ);
+      neigh = count(i,j,univ, Periodic);
       if(univ[i][j] == 0)
       {
-        if(neigh == 3) univ2[i][j] = 1;
+        if(neigh == reborn) univ2[i][j] = 1;
       }
       else
       {
-        if(neigh <= 1 || neigh >= 4) univ2[i][j] = 0;
-        if(neigh == 2 || neigh == 3) univ2[i][j] = 1;
+        if(neigh <= mindeath || neigh >= maxdeath) univ2[i][j] = 0;
+        else univ2[i][j] = 1;
       }
     }
   }
