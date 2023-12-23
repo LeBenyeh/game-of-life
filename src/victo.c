@@ -1,3 +1,23 @@
+void randomseed(bool univ[HEIGHT][WIDTH],int perc)
+{
+  bool univ2[HEIGHT][WIDTH]={0};
+  for (int i=0; i<HEIGHT; i++)
+  {
+    for (int j=0; j<WIDTH; j++)
+    {
+      if(rand()%101< perc) univ2[i][j] = 1;
+      else univ2[i][j] = 0;
+    }
+  }
+  for (int i=0; i<WIDTH;i++)
+  {
+    for (int j=0; j<HEIGHT;j++)
+    {
+      univ[i][j]=univ2[i][j];
+    }
+  }
+}
+
 int nmod(int val)
 {
   if(val==-1) return HEIGHT-1;
