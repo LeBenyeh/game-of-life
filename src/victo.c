@@ -33,7 +33,7 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
   {
     for(j=-1; j<2;j++)
     {
-      if(Periodic == 1 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
+      if(Periodic =! 1 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
       {
         neigh++;
       }
