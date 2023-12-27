@@ -28,34 +28,22 @@ int nmod(int val)
 
 int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
 {
-  int c=0, i, j;
-  if(Periodic == 1)
+  int neigh=0, i, j;
+  for(i=-1; i<2;i++)
   {
-    for(i=-1; i<2;i++)
+    for(j=-1; j<2;j++)
     {
-      for(j=-1; j<2;j++)
+      if(Periodic == 1 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
       {
-        if(lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)
-        {
-          if(lig+i != lig || col+j != col)
-          {
-            if(univ[lig+i][col+j] == 1)
-            {
-              c++;
-  }}}}}}
-  else
-  {
-    for(i=-1; i<2;i++)
-    {
-      for(j=-1; j<2;j++)
+        neigh++;
+      }
+      else if(univ[nmod(lig+i)][nmod(col+j)] == 1 && (lig+i != lig || col+j != col))
       {
-        if(lig+i != lig || col+j != col)
-        {
-          if(univ[nmod(lig+i)][nmod(col+j)] == 1)
-          {
-            c++;
-  }}}}}
-  return c;
+        neigh++;
+      }
+    }
+  }
+  return neigh;
 }
 
 void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, int maxdeath)
