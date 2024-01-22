@@ -6,25 +6,27 @@
 #include <time.h>
 #define Time 1
 
-int nmod(int val)
+int nmod(int val) // Creation d'une fonction modulo qui fonctionne dans les négatifs
 {
-  if(val==-1) return HEIGHT-1;
-  else return val%HEIGHT;
+  if(val==-1) return HEIGHT-1; // Par exemple "-1 % 10 = 9"
+  else return val%HEIGHT; // Utilisation du modulo classique "11 % 10 = 1"
 }
 
 void randomseed(bool univ[HEIGHT][WIDTH],int perc)
 {
-  srand(time(NULL));
+  srand(time(NULL)); // initialisation de la foncion random
   bool univ2[HEIGHT][WIDTH]={0};
+  //-----------------------------Remplissage du tableau aléatoire-------------------------------------------//
   for (int i=0; i<HEIGHT; i++)
   {
     for (int j=0; j<WIDTH; j++)
     {
 
-      if(rand()%101<= perc) univ2[i][j] = 1;
+      if(rand()%101<= perc) univ2[i][j] = 1; // on module à 101 pour obtenir des valeurs entre 0 et 100.
       else univ2[i][j] = 0;
     }
   }
+  //-----------------------------Copie du tableau aléatoire sur la seed empty------------------------------//
   for (int i=0; i<WIDTH;i++)
   {
     for (int j=0; j<HEIGHT;j++)
@@ -43,10 +45,12 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
     for(j=-1; j<2;j++)
     {
       if(Periodic == 0 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
+      //----Comptage en mode non-periodique : on verifie que le voisin n'est pas "hors tableau" puis on s'assure que le voisin n'est pas notre pixel------//
       {
         neigh++;
       }
       else if(univ[nmod(lig+i)][nmod(col+j)] == 1 && (lig+i != lig || col+j != col))
+      //----Comptage en mode periodique : on verifie d'abord si le voisin de "la sphére" est vivant puis on s'assure que le voisin n'est pas notre pixel----//
       {
         neigh++;
       }
@@ -57,13 +61,14 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
 
 void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, int maxdeath)
 {
-  bool univ2[HEIGHT][WIDTH]={0};
+  bool univ2[HEIGHT][WIDTH]={0}; // on écrit le resultat sur un second univers pour ne pas mélanger les nouveaux des anciens voisins dans le comptage.
   int neigh;
   for (int i=0; i<HEIGHT; i++)
   {
     for (int j=0; j<WIDTH; j++)
     {
       neigh = count(i,j,univ, Periodic);
+//-------------Début des transformations en fonction du nombre de voisin et des conditions imposées---------------//
       if(univ[i][j] == 0)
       {
         if(neigh == reborn) univ2[i][j] = 1;
@@ -75,6 +80,7 @@ void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, in
       }
     }
   }
+  //-------------Copie du tableau entièrement modifié sur la seed---------------//
   for (int i=0; i<WIDTH;i++)
   {
     for (int j=0; j<HEIGHT;j++)
