@@ -90,7 +90,7 @@ void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, in
   }
 }
 
-void Display(bool univ[HEIGHT][WIDTH])
+void Display(bool univ[HEIGHT][WIDTH]) // Affichage de l'univers (matrice)
 {
   system("clear");
   for (int i =0; i<WIDTH;i++)
@@ -105,22 +105,23 @@ void Display(bool univ[HEIGHT][WIDTH])
 
 int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* death_max, int* display, int* random, int* percentage )
 {
+  // Cette fonction affiche le menu pour l'utilisateur dans lequel il pourra choisir les differents paramètres proposés en entrant le nombre de la section demandée
 
   switch (Mode)
   {
-    case 0 :      //Menu principal
+    case 0 : //Menu principal
       printf("Menu \n\n");
       printf("1. Seed selection \n");
       printf("2. Universe properties \n");
       printf("3. Life & Death option \n");
       printf("4. Display mode \n\n");
-      printf("5. RUN \n\n");
-      printf("Enter the section's number  ");
+      printf("5. RUN");
+      printf("\n\nEnter the section's number ");
       scanf("%d", &Mode);
       system("clear");
       break;
 
-    case 1 :     // Menu de sélection des seeds
+    case 1 :// Menu de sélection des seeds
 
       printf("Seed selection \n\n");
       printf("1. Beacon \n");
@@ -129,12 +130,12 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
       printf("4. Full \n");
       printf("5. Glider \n");
       printf("6. Random \n\n");
-      printf("7. Back to Menu \n\n");
-      printf("Enter the number of a section ");
-      int select_seed = 0;
-      scanf("%d", &select_seed);
+      printf("7. Back to Menu");
+      printf("\n\nEnter the section's number ");
+      int scanSeed = 0;
+      scanf("%d", &scanSeed);
 
-      switch (select_seed)        //Lien de la seed
+      switch (scanSeed)//Lien de la seed
       {
         case 1 :
           *seed = "../seeds/beacon-10x10.life";
@@ -169,24 +170,39 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
       system("clear");
       break;
 
-    case 2 :
-      printf("Universe properties \n\n");       //Section Universe properties
+    case 2 : //Section Universe properties
+      printf("Universe properties \n\n");
       printf("1. Non-Periodic Universe \n");
       printf("2. Periodic Universe \n");
-      printf("Enter the number of a section ");
-      scanf("%d", Periodic);
+      printf("\n3. Back to Menu");
+      printf("\n\nEnter the section's number ");
+      int scanPeriodic;
+      scanf("%d", &scanPeriodic);
+      switch(scanPeriodic)
+      {
+        case 1 :
+          *Periodic = 0;
+          break;
+        case 2 :
+          *Periodic = 1;
+          break;
+        case 3 :
+          break;
+      }
       Mode = 0;
       system("clear");
       break;
 
-    case 3 :
-      printf("Life & Death option \n\n");         //Section life&death option
+    case 3 : //Section life&death option
+      printf("Life & Death option \n\n");
       printf("1. Life conditions \n");
-      printf("2. Death conditions\n");
-      int choix_life;
-      scanf("%d",&choix_life );
+      printf("2. Death conditions");
+      printf("\n\n3. Back to Menu");
+      printf("\n\nEnter the section's number ");
+      int scanLife;
+      scanf("%d",&scanLife );
 
-      switch(choix_life)
+      switch(scanLife)
       {
         case 1 :
           printf("Number of neighbours to reborn : ");
@@ -198,17 +214,33 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
           printf("\n Number of neighbours max to die: ");
           scanf("%d", death_max);
           break;
+        case 3 :
+          break;
       }
       Mode = 0;
       system("clear");
       break;
 
-    case 4 :                              // Section Display mode
+    case 4 : // Section Display mode
       printf("Display Mode \n\n");
       printf("1. Manual \n");
-      printf("2. Auto \n");
-      printf("Enter the number of a section ");
-      scanf("%d",display);
+      printf("2. Auto ");
+      printf("\n\n3. Back to Menu");
+      printf("\n\nEnter the section's number ");
+      int scanDisplay;
+      scanf("%d",&scanDisplay);
+      switch(scanDisplay)
+      {
+        case 1 :
+          *display = 1;
+          break;
+        case 2 :
+          *display = 2;
+          break;
+        case 3 :
+          break;
+
+      }
       Mode = 0;
       system("clear");
       break;
@@ -240,12 +272,17 @@ int main()
   while (mode != 5)
   {
     mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode, &random, &percentage);
+    // Le menu restera jusqu'au 5.RUN, on récupère toutes les valeurs grâce à des pointeurs. Ces valeurs seront utilisées dans la boucle
   }
- // mode = mode_chosing();
 
-  load_seed(seed,univ);
+  return 0;
+}
+  load_seed(seed,univ);   // Chargement de la seed dans l'univers
   if(random == 1) randomseed(univ, percentage);
   Display(univ); // Premier affichage
+  printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n", // affichage des paramètres sélectionnés
+         seed, Periodic, life, deathMin, deathMax, display_mode);
+  printf("\n\n\n[N]ext Or [S]top :   ");
 
 
   //----------------------------Début de la boucle -------------------------------------//
@@ -254,27 +291,30 @@ int main()
     switch(display_mode)
     {
 
-      case 1:
+      case 1:     // Mode Manuel
 
         scanf("%c",&button_press);
-        if (button_press =='q') return 0;       // Q pour quitter
-        else if (button_press =='a')
+        if (button_press =='s'||button_press =='S') return 0;       // Q pour quitter
+        else if (button_press =='n'||button_press =='N')            // A pour afficher la prochaine génération
         {
           evolve(univ,Periodic,life,deathMin,deathMax);
-          Display(univ);  // A pour afficher la prochaine génération
-          printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n",seed, Periodic, life, deathMin, deathMax, display_mode);
+          Display(univ);
+          printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n",
+                 seed, Periodic, life, deathMin, deathMax, display_mode);
+          printf("\n\n\n[N]ext Or [S]top :   ");
         }
         else button_press ='0';
         break;
 
-      case 2:
+      case 2:     //Mode automatique
 
         evolve(univ,Periodic,life,deathMin,deathMax);
         Display(univ);
         printf("Generation number %d\n", cpt_generation);
-        printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n",seed, Periodic, life, deathMin, deathMax, display_mode);
+        printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n",
+               seed, Periodic, life, deathMin, deathMax, display_mode);
         cpt_generation++;
-        sleep(Time);
+        sleep(Time);// attente du programme en secondes
         break;
     }
 
@@ -283,3 +323,4 @@ int main()
 
   return 0;
 }
+
