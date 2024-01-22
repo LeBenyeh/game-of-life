@@ -7,7 +7,7 @@ void randomseed(bool univ[HEIGHT][WIDTH],int perc)
     for (int j=0; j<WIDTH; j++)
     {
 
-      if(rand()%101< perc) univ2[i][j] = 1;
+      if(rand()%101<= perc) univ2[i][j] = 1;
       else univ2[i][j] = 0;
     }
   }
