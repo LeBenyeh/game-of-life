@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include "inout.h"
+#include <time.h>
 #define Time 1
 
 int nmod(int val)
@@ -11,36 +12,47 @@ int nmod(int val)
   else return val%HEIGHT;
 }
 
+void randomseed(bool univ[HEIGHT][WIDTH],int perc)
+{
+  srand(time(NULL));
+  bool univ2[HEIGHT][WIDTH]={0};
+  for (int i=0; i<HEIGHT; i++)
+  {
+    for (int j=0; j<WIDTH; j++)
+    {
+
+      if(rand()%101<= perc) univ2[i][j] = 1;
+      else univ2[i][j] = 0;
+    }
+  }
+  for (int i=0; i<WIDTH;i++)
+  {
+    for (int j=0; j<HEIGHT;j++)
+    {
+      univ[i][j]=univ2[i][j];
+    }
+  }
+}
+
+
 int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
 {
-  int c=0, i, j;
-  if(Periodic == 1)
+  int neigh=0, i, j;
+  for(i=-1; i<2;i++)
   {
-    for(i=-1; i<2;i++)
+    for(j=-1; j<2;j++)
     {
-      for(j=-1; j<2;j++)
+      if(Periodic == 0 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
       {
-        if(lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)
-        {
-          if(lig+i != lig || col+j != col)
-          {
-            if(univ[lig+i][col+j] == 1)
-            {
-              c++;
-  }}}}}}
-  else
-  {
-    for(i=-1; i<2;i++)
-    {
-      for(j=-1; j<2;j++)
+        neigh++;
+      }
+      else if(univ[nmod(lig+i)][nmod(col+j)] == 1 && (lig+i != lig || col+j != col))
       {
-        if(lig+i != lig || col+j != col)
-        {
-          if(univ[nmod(lig+i)][nmod(col+j)] == 1)
-          {
-            c++;
-  }}}}}
-  return c;
+        neigh++;
+      }
+    }
+  }
+  return neigh;
 }
 
 void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, int maxdeath)
@@ -85,20 +97,7 @@ void Display(bool univ[HEIGHT][WIDTH])
   }
 }
 
-int mode_chosing()
-{
-  char select_mode;
-  int mode = -1;
-  while(mode == -1)
-  {
-  if(select_mode=='M' ||select_mode=='m') mode = 0;
-  else if (select_mode=='A' ||select_mode=='a') mode = 1;
-  else scanf("%c",&select_mode);
-  }
-  return mode;
-}
-
-int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* death_max, int* display)
+int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* death_max, int* display, int* random, int* percentage )
 {
 
   switch (Mode)
@@ -133,21 +132,29 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
       {
         case 1 :
           *seed = "../seeds/beacon-10x10.life";
+          *random = 0;
           break;
         case 2 :
           *seed = "../seeds/blinker-10x10.life";
+          *random = 0;
           break;
         case 3 :
           *seed = "../seeds/empty-10x10.life";
+          *random = 0;
           break;
         case 4 :
           *seed = "../seeds/full-10x10.life";
+          *random = 0;
           break;
         case 5 :
           *seed = "../seeds/glider-10x10.life";
+          *random = 0;
           break;
         case 6 :
-          /* seed = random_seed(); TODO: créer une procedure random seed et refléchir à comment load au start */
+          *seed = "../seeds/empty-10x10.life";
+          *random = 1;
+          printf("Spawning probability (0-100): ");
+          scanf("%d",percentage);
           break;
         case 7 :
           break;
@@ -218,17 +225,20 @@ int main()
   int deathMin = 1;
   int deathMax = 4;
   int display_mode = 1;
+  int random = 0;
+  int percentage = 50;
 
   //-----------------------------Fin création des variables------------------------------//
   //----------------------------Demande du mode-------------------------//
   system("clear");
   while (mode != 5)
   {
-    mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode);
+    mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode, &random, &percentage);
   }
  // mode = mode_chosing();
 
   load_seed(seed,univ);
+  if(random == 1) randomseed(univ, percentage);
   Display(univ); // Premier affichage
 
 
