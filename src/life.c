@@ -6,27 +6,25 @@
 #include <time.h>
 #define Time 1
 
-int nmod(int val) // Creation d'une fonction modulo qui fonctionne dans les négatifs
+int nmod(int val)
 {
-  if(val==-1) return HEIGHT-1; // Par exemple "-1 % 10 = 9"
-  else return val%HEIGHT; // Utilisation du modulo classique "11 % 10 = 1"
+  if(val==-1) return HEIGHT-1;
+  else return val%HEIGHT;
 }
 
 void randomseed(bool univ[HEIGHT][WIDTH],int perc)
 {
-  srand(time(NULL)); // initialisation de la foncion random
+  srand(time(NULL));
   bool univ2[HEIGHT][WIDTH]={0};
-  //-----------------------------Remplissage du tableau aléatoire-------------------------------------------//
   for (int i=0; i<HEIGHT; i++)
   {
     for (int j=0; j<WIDTH; j++)
     {
 
-      if(rand()%101<= perc) univ2[i][j] = 1; // on module à 101 pour obtenir des valeurs entre 0 et 100.
+      if(rand()%101<= perc) univ2[i][j] = 1;
       else univ2[i][j] = 0;
     }
   }
-  //-----------------------------Copie du tableau aléatoire sur la seed empty------------------------------//
   for (int i=0; i<WIDTH;i++)
   {
     for (int j=0; j<HEIGHT;j++)
@@ -45,12 +43,10 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
     for(j=-1; j<2;j++)
     {
       if(Periodic == 0 && univ[lig+i][col+j] == 1 && (lig+i >= 0 && lig+i <= HEIGHT && col+j >= 0 && col+j <= WIDTH)&&(lig+i != lig || col+j != col))
-      //----Comptage en mode non-periodique : on verifie que le voisin n'est pas "hors tableau" puis on s'assure que le voisin n'est pas notre pixel------//
       {
         neigh++;
       }
       else if(univ[nmod(lig+i)][nmod(col+j)] == 1 && (lig+i != lig || col+j != col))
-      //----Comptage en mode periodique : on verifie d'abord si le voisin de "la sphére" est vivant puis on s'assure que le voisin n'est pas notre pixel----//
       {
         neigh++;
       }
@@ -61,14 +57,13 @@ int count(int lig, int col, bool univ[HEIGHT][WIDTH],int Periodic)
 
 void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, int maxdeath)
 {
-  bool univ2[HEIGHT][WIDTH]={0}; // on écrit le resultat sur un second univers pour ne pas mélanger les nouveaux des anciens voisins dans le comptage.
+  bool univ2[HEIGHT][WIDTH]={0};
   int neigh;
   for (int i=0; i<HEIGHT; i++)
   {
     for (int j=0; j<WIDTH; j++)
     {
       neigh = count(i,j,univ, Periodic);
-//-------------Début des transformations en fonction du nombre de voisin et des conditions imposées---------------//
       if(univ[i][j] == 0)
       {
         if(neigh == reborn) univ2[i][j] = 1;
@@ -80,7 +75,6 @@ void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, in
       }
     }
   }
-  //-------------Copie du tableau entièrement modifié sur la seed---------------//
   for (int i=0; i<WIDTH;i++)
   {
     for (int j=0; j<HEIGHT;j++)
@@ -90,7 +84,8 @@ void evolve(bool univ[HEIGHT][WIDTH], int Periodic, int reborn, int mindeath, in
   }
 }
 
-void Display(bool univ[HEIGHT][WIDTH]) // Affichage de l'univers (matrice)
+void Display(bool univ[HEIGHT][WIDTH])
+//Affiche l'univers
 {
   system("clear");
   for (int i =0; i<WIDTH;i++)
@@ -274,15 +269,12 @@ int main()
     mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode, &random, &percentage);
     // Le menu restera jusqu'au 5.RUN, on récupère toutes les valeurs grâce à des pointeurs. Ces valeurs seront utilisées dans la boucle
   }
-
-  return 0;
-}
   load_seed(seed,univ);   // Chargement de la seed dans l'univers
   if(random == 1) randomseed(univ, percentage);
   Display(univ); // Premier affichage
   printf("seed = %s\nPeriodic = %d\nlife = %d\ndeathMin = %d\ndeathMax = %d\ndisplay Mode = %d \n", // affichage des paramètres sélectionnés
          seed, Periodic, life, deathMin, deathMax, display_mode);
-  printf("\n\n\n[N]ext Or [S]top :   ");
+  printf("\n\n\n[N]ext Or [S]top :   \n");
 
 
   //----------------------------Début de la boucle -------------------------------------//
@@ -323,4 +315,3 @@ int main()
 
   return 0;
 }
-
