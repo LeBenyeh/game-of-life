@@ -239,7 +239,10 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
       Mode = 0;
       system("clear");
       break;
-
+    default :
+      printf("!!! ERROR PLEASE ENTER A VALID NUMBER !!!\n");
+      Mode = 0;
+      break;
   }
   return Mode;
 
