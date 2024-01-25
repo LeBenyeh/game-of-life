@@ -14,22 +14,14 @@ int nmod(int val)
 
 void randomseed(bool univ[HEIGHT][WIDTH],int perc)
 {
-  srand(time(NULL));
-  bool univ2[HEIGHT][WIDTH]={0};
+  srand(time(NULL)); // initialisation de la foncion random
+  //-----------------------------Remplissage du tableau aléatoire sur la seed empty------------------------------------//
   for (int i=0; i<HEIGHT; i++)
   {
     for (int j=0; j<WIDTH; j++)
     {
-
-      if(rand()%101<= perc) univ2[i][j] = 1;
-      else univ2[i][j] = 0;
-    }
-  }
-  for (int i=0; i<WIDTH;i++)
-  {
-    for (int j=0; j<HEIGHT;j++)
-    {
-      univ[i][j]=univ2[i][j];
+      if(rand()%101<= perc) univ[i][j] = 1; // on module à 101 pour obtenir des valeurs entre 0 et 100.
+      else univ[i][j] = 0;
     }
   }
 }
