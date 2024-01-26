@@ -196,9 +196,9 @@ int Menu(int Mode, char** seed, int *Periodic, int* life, int* death_min, int* d
           scanf("%d", life);
           break;
         case 2 :
-          printf("Number of neighbours min to die: ");
+          printf("Number of neighbours below ... to die : ");
           scanf("%d", death_min);
-          printf("\n Number of neighbours max to die: ");
+          printf("\n Number of neighbours above ... to die: ");
           scanf("%d", death_max);
           break;
         case 3 :
@@ -259,11 +259,10 @@ int main()
   //-----------------------------Fin création des variables------------------------------//
   //----------------------------Demande du mode-------------------------//
   system("clear");
-  while (mode != 5)
-  {
-    mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode, &random, &percentage);
-    // Le menu restera jusqu'au 5.RUN, on récupère toutes les valeurs grâce à des pointeurs. Ces valeurs seront utilisées dans la boucle
-  }
+
+  // Le menu restera jusqu'au 5.RUN, on récupère toutes les valeurs grâce à des pointeurs. Ces valeurs seront utilisées dans la boucle
+  while (mode != 5) mode = Menu(mode,&seed,&Periodic,&life,&deathMin,&deathMax,&display_mode, &random, &percentage);
+
   load_seed(seed,univ);   // Chargement de la seed dans l'univers
   if(random == 1) randomseed(univ, percentage);
   Display(univ); // Premier affichage
